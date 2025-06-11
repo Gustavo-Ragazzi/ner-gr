@@ -8,9 +8,20 @@ router = APIRouter()
   "/classify",
   response_model=ClassifyResponse,
   summary="Classify named entities in a string",
-  description="Returns a list of tokens with their predicted entity classifications."
+  description=(
+    "Receives a string input and returns a list of tokens with their corresponding "
+    "predicted classifications such as name, address, document, etc."
+  )
 )
 def classify_text(request: ClassifyRequest = Body(...)) -> dict[str, list[TokenClassification]]:
+  """
+  Classifies entities in the provided text using a trained CRF model.
+
+  Args:
+    request (ClassifyRequest): Object containing the input text.
+
+  Returns:
+    dict[str, list[TokenClassification]]: A dictionary with a `result` key containing a list of token-classification pairs.
+  """
   raw_result = predict_entities(request.text)
-  structured_result = [TokenClassification(**item) for item in raw_result]
-  return {"result": structured_result}
+  return {"result": [TokenClassification(**item) for item in raw_result]}
