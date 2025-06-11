@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import health
+from app.routers import health, ner
 
 app = FastAPI(
   title="ML Classifier API",
@@ -8,3 +8,4 @@ app = FastAPI(
 )
 
 app.include_router(health.router)
+app.include_router(ner.router)
