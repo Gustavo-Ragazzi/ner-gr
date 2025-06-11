@@ -1,6 +1,7 @@
 import requests
-from google.adk.agents import Agent
 import os
+from datetime import datetime
+from google.adk.agents import Agent
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -21,25 +22,43 @@ def classify_text(text: str) -> dict:
       gender = gender_response.json().get("gender", "fail")
       return {
         "status": "success",
-        "report": (
-          f"Resultado da classificação: {result}\n\n"
-          f"O nome '{name}' foi classificado do gênero: {gender}."
-        ),
+        "extracted_data": result,
+        "gender_phrase": f"The name '{name}' was classified as: {gender}.",
       }
 
     return {
       "status": "success",
-      "report": f"Resultado da classificação: {result}\nNenhum nome encontrado.",
+      "extracted_data": result,
+      "gender_phrase": None,
     }
 
   except requests.exceptions.RequestException as e:
     return {"status": "error", "error_message": f"Failed to reach API: {str(e)}"}
 
 
+def get_greeting():
+  current_hour = datetime.now().hour
+  if 5 <= current_hour < 12:
+    return "Good morning"
+  if 12 <= current_hour < 18:
+    return "Good afternoon"
+  return "Good evening"
+
 root_agent = Agent(
   name="ner_agent",
   model="gemini-2.0-flash",
-  description="Agent that classifies text using an NER API and optionally detects gender from names.",
-  instruction="You always classify any incoming text using the external NER API.",
+  description="Agent that extracts registration data using NER.",
+  instruction=f"""
+  1. Greet the user with "{get_greeting()}". Then say: "I'm here to extract your registration data from natural language using Named Entity Recognition (NER)."
+  2. Ask the user to provide their registration details (e.g. name, CPF/CNPJ, address).
+  3. Once you receive the input, use the `classify_text` tool to extract tokens and their classifications.
+  4. After receiving the response from the tool, print each token with its classification in this exact format:
+    **token**: classification
+    - one item per line
+    - keep the original order of tokens
+  5. If the response includes a field called `gender_phrase`, print it in a new paragraph after listing the tokens.
+  6. Do not group tokens into entities like "Name: Gustavo Silva Pereira". Print each token individually as instructed.
+  7. Do not add commentary or summaries. Only output the formatted list and the gender phrase (if available).
+  """,
   tools=[classify_text],
 )
