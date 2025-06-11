@@ -1,15 +1,14 @@
-[project]
+[tool.poetry]
 name = "adk"
 version = "1.0.0"
 description = "Agent using Google ADK"
-authors = [
-    {name = "Gustavo Ragazzi Amorim",email = "ragazzi@hotmail.com.br"}
-]
-package-mode = false
+authors = ["Gustavo Ragazzi Amorim <ragazzi@hotmail.com.br>"]
 readme = "../README.md"
-requires-python = ">=3.13"
-dependencies = ["google-adk (>=1.2.1,<2.0.0)"]
+packages = [{ include = "named_entity_recognition" }]
 
+[tool.poetry.dependencies]
+python = ">=3.13"
+google-adk = ">=1.2.1,<2.0.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

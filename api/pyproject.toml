@@ -1,23 +1,18 @@
-[project]
+[tool.poetry]
 name = "api"
 version = "1.0.0"
-description = ""
-authors = [
-    {name = "Gustavo Ragazzi Amorim",email = "ragazzi@hotmail.com.br"}
-]
-package-mode = false
-readme = "../README.md"
-requires-python = ">=3.13"
-dependencies = [
-    "fastapi (>=0.115.12,<0.116.0)",
-    "uvicorn[standard] (>=0.34.3,<0.35.0)",
-    "pydantic (>=2.11.5,<3.0.0)",
-    "python-crfsuite (>=0.9.11,<0.10.0)",
-    "pandas (>=2.3.0,<3.0.0)",
-    "python-dotenv (>=1.1.0,<2.0.0)",
-]
+description = "NER and gender classification API"
+authors = ["Gustavo Ragazzi Amorim <ragazzi@hotmail.com.br>"]
 
+[tool.poetry.dependencies]
+python = ">=3.11,<4.0"
+fastapi = "^0.115.1"
+uvicorn = { extras = ["standard"], version = "^0.34.3" }
+pydantic = "^2.11.5"
+python-crfsuite = "^0.9.11"
+pandas = "^2.3.0"
+python-dotenv = "^1.1.0"
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
