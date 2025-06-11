@@ -94,7 +94,7 @@ The model used is a **Conditional Random Field (CRF)** trained to extract semant
 ```
 POST http://127.0.0.1:8001/classify
 {
-  "text": "Meu nome é Gustavo Ragazzi Amorim, moro na rua Sergipe, número 430, bairro Tereza Cristina da cidade São Joaquim de Bicas - MG"
+  "text": "Meu nome é Gustavo Ragazzi Amorim. Rua Sergipe, número 202, bairro Centro, Belo Horizonte - MG, CEP 30199-999, CPF 111.222.333-44"
 }
 ```
 
@@ -104,10 +104,11 @@ POST http://127.0.0.1:8001/classify
 {
   "result": [
     { "token": "Meu", "classification": "LX" },
+    { "token": "nome", "classification": "LX" },
+    { "token": "é", "classification": "LX" },
     { "token": "Gustavo", "classification": "full_name" },
-    { "token": "rua", "classification": "street_type" },
-    { "token": "Sergipe,", "classification": "street_name" },
-    { "token": "MG", "classification": "address_state" }
+    { "token": "Ragazzi", "classification": "full_name" },
+    { "token": "Amorim", "classification": "full_name" },
     ...
   ]
 }
@@ -182,13 +183,20 @@ This will open a browser to complete authentication.
 
 ## 🧪 Testing the System
 
-You can test the full flow by editing the sample input in `agent.py` or creating a curl request to the FastAPI endpoint. Try something like:
+You can test the full flow by accessing the web interface on http://localhost:8000. Type a full sentence containing a name and address in the input field, and the agent will:
 
+1. Call the classification endpoint with your input
+2. Extract named entities
+3. Trigger a gender lookup (if a full name is detected)
+4. Show the structured result and inferred gender below
+
+Prompt Exemple:
 ```
-Rua Irineu Ferreira da Silva, 231 Taubaté São Paulo CEP
+Meu nome é Gustavo Ragazzi Amorim. Rua Sergipe, número 202, bairro Centro, Belo Horizonte - MG, CEP 30199-999, CPF 111.222.333-44
 ```
 
-The system will return structured tokens and the detected gender for the first full name.
+![Web interface preview](./assets/web-preview.png)
+
 
 ---
 
