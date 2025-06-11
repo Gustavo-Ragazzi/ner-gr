@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import health, ner
+from app.routers import health, ner, gender
 
 app = FastAPI(
   title="ML Classifier API",
@@ -9,3 +9,4 @@ app = FastAPI(
 
 app.include_router(health.router)
 app.include_router(ner.router)
+app.include_router(gender.router)
